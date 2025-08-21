@@ -2,18 +2,19 @@ body {
   margin: 0;
   font-family: sans-serif;
   text-align: center;
-  font-weight: bold; /* all text bold */
+  font-weight: bold;
 }
 
+/* Softer pastel flag colours */
 .header, .footer {
-  background-color: red;
-  color: yellow;
+  background-color: #ff9999;  /* soft red */
+  color: #fff6b3;             /* soft yellow for text */
   padding: 20px;
 }
 
 .main {
-  background-color: yellow;
-  color: red;
+  background-color: #fff6b3;  /* soft yellow */
+  color: #ff9999;             /* soft red for text */
   padding: 40px;
 }
 
