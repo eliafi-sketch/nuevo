@@ -1,81 +1,69 @@
-let sessionNumber = 0; 
-let currentData1 = [];
-let currentData2 = [];
-let questions = [];
-let currentIndex = 0;
-let awaitingNext = false; // toggle between checking vs next
+/* -------------------------
+   NUMBERS QUIZ
+--------------------------*/
+let numberSession = 0;
+let numberQuestions = [];
 
-// Load JSON files
-async function loadData() {
+async function loadNumberData() {
   const res1 = await fetch("data/numbers-1.json");
-  currentData1 = await res1.json();
-
+  const pool1 = await res1.json();
   const res2 = await fetch("data/numbers-2.json");
-  currentData2 = await res2.json();
+  const pool2 = await res2.json();
+
+  numberQuestions = [pool1, pool2];
 }
 
-// Ratios for progression
-const ratios = [
-  { old: 1.0, next: 0.0 },
-  { old: 0.8, next: 0.2 },
-  { old: 0.6, next: 0.4 },
-  { old: 0.4, next: 0.6 },
-  { old: 0.2, next: 0.8 },
-  { old: 0.0, next: 1.0 }
-];
-
-// Random sample
-function sample(array, n) {
-  const copy = [...array];
-  const result = [];
-  for (let i = 0; i < n && copy.length > 0; i++) {
-    const idx = Math.floor(Math.random() * copy.length);
-    result.push(copy[idx]);
-    copy.splice(idx, 1);
-  }
-  return result;
+function startNumberQuiz() {
+  const questions = [...numberQuestions[0]]; // just first pool to demo
+  runQuiz(questions, "Numbers quiz complete! 🎉");
 }
 
-// Generate 10-question session
-function generateSession(sessionNum) {
-  const ratio = ratios[Math.min(sessionNum, ratios.length - 1)];
-  const oldCount = Math.round(10 * ratio.old);
-  const newCount = 10 - oldCount;
 
-  const oldQs = sample(currentData1, oldCount);
-  const newQs = sample(currentData2, newCount);
+/* -------------------------
+   HISTORY YEARS QUIZ
+--------------------------*/
+let yearQuestions = [];
 
-  return shuffle([...oldQs, ...newQs]);
+async function loadYearData() {
+  const res = await fetch("data/years.json");
+  yearQuestions = await res.json();
 }
 
-// Shuffle
-function shuffle(array) {
-  return array.map(v => ({ v, r: Math.random() }))
-              .sort((a, b) => a.r - b.r)
-              .map(obj => obj.v);
+function startYearQuiz() {
+  runQuiz(yearQuestions, "History years quiz complete! 🎉");
 }
 
-// Start a new quiz session
-function startQuiz() {
-  questions = generateSession(sessionNumber);
+
+/* -------------------------
+   GENERIC QUIZ ENGINE
+   (used by both quizzes)
+--------------------------*/
+let currentIndex = 0;
+let currentQuestions = [];
+let awaitingNext = false;
+let endMessage = "";
+
+function runQuiz(qs, message) {
+  currentQuestions = shuffle(qs);
   currentIndex = 0;
   awaitingNext = false;
+  endMessage = message;
   showQuestion();
 }
 
-// Show current question
 function showQuestion() {
   const container = document.getElementById("quiz");
   container.innerHTML = "";
 
-  const q = questions[currentIndex];
+  const q = currentQuestions[currentIndex];
 
   const label = document.createElement("p");
-  label.textContent = `Translate: ${q.en}`;
+  label.textContent = q.q ? q.q : `Translate: ${q.en}`;
   container.appendChild(label);
 
   const input = document.createElement("input");
   input.id = "answerBox";
+  input.placeholder = "Type in Spanish...";
   container.appendChild(input);
 
   const feedback = document.createElement("p");
@@ -89,115 +77,17 @@ function showQuestion() {
   container.appendChild(btn);
 
   input.focus();
-
-  // allow Enter key to submit
   input.addEventListener("keydown", e => {
     if (e.key === "Enter") handleAnswer();
   });
 }
 
-// Handle submit/next logic
 function handleAnswer() {
   const input = document.getElementById("answerBox");
   const feedback = document.getElementById("feedback");
   const btn = document.getElementById("submitBtn");
 
-  const q = questions[currentIndex];
-
-  if (!awaitingNext) {
-    // Check answer
-    if (input.value.trim().toLowerCase() === q.es.toLowerCase()) {
-      feedback.textContent = "✅ Correct!";
-      feedback.style.color = "green";
-    } else {
-      feedback.textContent = `❌ Wrong (Answer: ${q.es})`;
-      feedback.style.color = "red";
-    }
-    btn.textContent = "Next";
-    awaitingNext = true;
-  } else {
-    // Move to next question
-    currentIndex++;
-    if (currentIndex < questions.length) {
-      awaitingNext = false;
-      showQuestion();
-    } else {
-      endSession();
-    }
-  }
-}
-
-// End of session
-function endSession() {
-  const container = document.getElementById("quiz");
-  container.innerHTML = "<p>Session complete! 🎉</p>";
-
-  sessionNumber++; // unlock next progression
-  const nextBtn = document.createElement("button");
-  nextBtn.textContent = "Start Next Session";
-  nextBtn.onclick = startQuiz;
-  container.appendChild(nextBtn);
-}
-
-// Load the data once the page starts
-loadData();
-
-let yearQuestions = [];
-let currentIndex = 0;
-let awaitingNext = false;
-
-// Load JSON data
-async function loadYearData() {
-  const res = await fetch("data/years.json");
-  yearQuestions = await res.json();
-}
-
-// Start quiz
-function startQuiz() {
-  currentIndex = 0;
-  awaitingNext = false;
-  showYearQuestion();
-}
-
-// Show one question
-function showYearQuestion() {
-  const container = document.getElementById("quiz");
-  container.innerHTML = "";
-
-  const q = yearQuestions[currentIndex];
-
-  const label = document.createElement("p");
-  label.textContent = q.q;
-  container.appendChild(label);
-
-  const input = document.createElement("input");
-  input.id = "answerBox";
-  input.placeholder = "Type year in Spanish...";
-  container.appendChild(input);
-
-  const feedback = document.createElement("p");
-  feedback.id = "feedback";
-  container.appendChild(feedback);
-
-  const btn = document.createElement("button");
-  btn.id = "submitBtn";
-  btn.textContent = "Submit";
-  btn.onclick = handleYearAnswer;
-  container.appendChild(btn);
-
-  input.focus();
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter") handleYearAnswer();
-  });
-}
-
-// Handle answer check
-function handleYearAnswer() {
-  const input = document.getElementById("answerBox");
-  const feedback = document.getElementById("feedback");
-  const btn = document.getElementById("submitBtn");
-
-  const q = yearQuestions[currentIndex];
+  const q = currentQuestions[currentIndex];
 
   if (!awaitingNext) {
     if (input.value.trim().toLowerCase() === q.es.toLowerCase()) {
@@ -211,20 +101,31 @@ function handleYearAnswer() {
     awaitingNext = true;
   } else {
     currentIndex++;
-    if (currentIndex < yearQuestions.length) {
+    if (currentIndex < currentQuestions.length) {
       awaitingNext = false;
-      showYearQuestion();
+      showQuestion();
     } else {
-      endYearQuiz();
+      endQuiz();
     }
   }
 }
 
-// End of quiz
-function endYearQuiz() {
+function endQuiz() {
   const container = document.getElementById("quiz");
-  container.innerHTML = "<p>Quiz complete! 🎉</p>";
+  container.innerHTML = `<p>${endMessage}</p>`;
 }
+
+// Utility shuffle
+function shuffle(array) {
+  return array.map(v => ({ v, r: Math.random() }))
+              .sort((a, b) => a.r - b.r)
+              .map(obj => obj.v);
+}
+
+// Load data
+loadNumberData();
+loadYearData();
+
 
 // Load questions on page load
 loadYearData();
