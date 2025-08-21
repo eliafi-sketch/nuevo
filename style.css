@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  text-align: center;
+  font-weight: bold; /* all text bold */
+}
+
+.header, .footer {
+  background-color: red;
+  color: yellow;
+  padding: 20px;
+}
+
+.main {
+  background-color: yellow;
+  color: red;
+  padding: 40px;
+}
+
+.home-link img {
+  width: 40px;
+  height: auto;
+}
