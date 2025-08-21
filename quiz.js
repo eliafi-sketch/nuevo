@@ -1,6 +1,9 @@
-let sessionNumber = 0; // track progression
+let sessionNumber = 0; 
 let currentData1 = [];
 let currentData2 = [];
+let questions = [];
+let currentIndex = 0;
+let awaitingNext = false; // toggle between checking vs next
 
 // Load JSON files
 async function loadData() {
@@ -9,18 +12,6 @@ async function loadData() {
 
   const res2 = await fetch("data/numbers-2.json");
   currentData2 = await res2.json();
-}
-
-// Helper: random pick
-function sample(array, n) {
-  const copy = [...array];
-  const result = [];
-  for (let i = 0; i < n && copy.length > 0; i++) {
-    const idx = Math.floor(Math.random() * copy.length);
-    result.push(copy[idx]);
-    copy.splice(idx, 1);
-  }
-  return result;
 }
 
 // Ratios for progression
@@ -33,67 +24,122 @@ const ratios = [
   { old: 0.0, next: 1.0 }
 ];
 
-// Generate a session of 10 questions
+// Random sample
+function sample(array, n) {
+  const copy = [...array];
+  const result = [];
+  for (let i = 0; i < n && copy.length > 0; i++) {
+    const idx = Math.floor(Math.random() * copy.length);
+    result.push(copy[idx]);
+    copy.splice(idx, 1);
+  }
+  return result;
+}
+
+// Generate 10-question session
 function generateSession(sessionNum) {
   const ratio = ratios[Math.min(sessionNum, ratios.length - 1)];
-
   const oldCount = Math.round(10 * ratio.old);
   const newCount = 10 - oldCount;
 
   const oldQs = sample(currentData1, oldCount);
   const newQs = sample(currentData2, newCount);
 
-  return [...oldQs, ...newQs];
+  return shuffle([...oldQs, ...newQs]);
 }
 
-// Render quiz
+// Shuffle
+function shuffle(array) {
+  return array.map(v => ({ v, r: Math.random() }))
+              .sort((a, b) => a.r - b.r)
+              .map(obj => obj.v);
+}
+
+// Start a new quiz session
 function startQuiz() {
-  const questions = generateSession(sessionNumber);
+  questions = generateSession(sessionNumber);
+  currentIndex = 0;
+  awaitingNext = false;
+  showQuestion();
+}
+
+// Show current question
+function showQuestion() {
   const container = document.getElementById("quiz");
   container.innerHTML = "";
 
-  questions.forEach(q => {
-    const div = document.createElement("div");
-    const label = document.createElement("label");
-    label.textContent = `${q.en} → `;
-    const input = document.createElement("input");
-    input.dataset.answer = q.es;
-    div.appendChild(label);
-    div.appendChild(input);
-    container.appendChild(div);
-  });
+  const q = questions[currentIndex];
+
+  const label = document.createElement("p");
+  label.textContent = `Translate: ${q.en}`;
+  container.appendChild(label);
+
+  const input = document.createElement("input");
+  input.id = "answerBox";
+  container.appendChild(input);
+
+  const feedback = document.createElement("p");
+  feedback.id = "feedback";
+  container.appendChild(feedback);
 
   const btn = document.createElement("button");
+  btn.id = "submitBtn";
   btn.textContent = "Submit";
-  btn.onclick = () => checkAnswers(questions);
+  btn.onclick = handleAnswer;
   container.appendChild(btn);
+
+  input.focus();
+
+  // allow Enter key to submit
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") handleAnswer();
+  });
 }
 
-// Check answers
-function checkAnswers(questions) {
-  const inputs = document.querySelectorAll("#quiz input");
-  let correct = 0;
+// Handle submit/next logic
+function handleAnswer() {
+  const input = document.getElementById("answerBox");
+  const feedback = document.getElementById("feedback");
+  const btn = document.getElementById("submitBtn");
 
-  inputs.forEach(input => {
-    if (input.value.trim().toLowerCase() === input.dataset.answer.toLowerCase()) {
-      correct++;
-      input.style.borderColor = "green";
+  const q = questions[currentIndex];
+
+  if (!awaitingNext) {
+    // Check answer
+    if (input.value.trim().toLowerCase() === q.es.toLowerCase()) {
+      feedback.textContent = "✅ Correct!";
+      feedback.style.color = "green";
     } else {
-      input.style.borderColor = "red";
+      feedback.textContent = `❌ Wrong (Answer: ${q.es})`;
+      feedback.style.color = "red";
     }
-  });
-
-  const result = document.getElementById("result");
-  result.textContent = `You got ${correct} / ${questions.length}`;
-
-  if (correct === questions.length) {
-    sessionNumber++;
-    result.textContent += " ✅ Perfect! Next set unlocked.";
+    btn.textContent = "Next";
+    awaitingNext = true;
+  } else {
+    // Move to next question
+    currentIndex++;
+    if (currentIndex < questions.length) {
+      awaitingNext = false;
+      showQuestion();
+    } else {
+      endSession();
+    }
   }
 }
 
-// Load data when page starts
-loadData();
+// End of session
+function endSession() {
+  const container = document.getElementById("quiz");
+  container.innerHTML = "<p>Session complete! 🎉</p>";
 
+  sessionNumber++; // unlock next progression
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "Start Next Session";
+  nextBtn.onclick = startQuiz;
+  container.appendChild(nextBtn);
+}
+
+// Load the data once the page starts
+loadData();
 
 
