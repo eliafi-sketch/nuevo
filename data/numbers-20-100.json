@@ -1,52 +1,43 @@
 [
   {
-    "q": "¿Cuántos países hay en la Unión Europea?",
-    "en": "27",
-    "es": "veintisiete"
+    "question": "¿Cuántos países hay en la Unión Europea?",
+    "answer": "veintisiete"
   },
   {
-    "q": "¿Cuántos letras tiene el alfabeto español moderno?",
-    "en": "27",
-    "es": "veintisiete"
+    "question": "¿Cuántas letras tiene el alfabeto español moderno?",
+    "answer": "veintisiete"
   },
   {
-    "q": "¿Cuántos equipos juegan en la primera división del fútbol español (La Liga)?",
-    "en": "20",
-    "es": "veinte"
+    "question": "¿Cuántos equipos juegan en la primera división del fútbol español (La Liga)?",
+    "answer": "veinte"
   },
   {
-    "q": "¿Cuántos años gobernó Francisco Franco en España?",
-    "en": "36",
-    "es": "treinta y seis"
+    "question": "¿Cuántos años gobernó Francisco Franco en España?",
+    "answer": "treinta y seis"
   },
   {
-    "q": "¿En qué año (siglo) cayó el Imperio Romano de Occidente? (responde con el siglo en número romano convertido a número)",
-    "en": "5",
-    "es": "cinco"
+    "question": "¿En qué siglo cayó el Imperio Romano de Occidente? (responde con el número)",
+    "answer": "cinco"
   },
   {
-    "q": "¿Cuántos cantones hay en Suiza?",
-    "en": "26",
-    "es": "veintiséis"
+    "question": "¿Cuántos cantones hay en Suiza?",
+    "answer": "veintiséis"
   },
   {
-    "q": "¿En qué año murió Pablo Picasso? (da solo los dos últimos números)",
-    "en": "73",
-    "es": "setenta y tres"
+    "question": "¿En qué año murió Pablo Picasso? (da solo los dos últimos números)",
+    "answer": "setenta y tres"
   },
   {
-    "q": "¿Cuántos episodios tiene la primera temporada de 'La Casa de Papel'?",
-    "en": "13",
-    "es": "trece"
+    "question": "¿Cuántos episodios tiene la primera temporada de 'La Casa de Papel'?",
+    "answer": "trece"
   },
   {
-    "q": "¿Cuántos huesos tiene el cuerpo humano adulto (aprox., redondeado a la decena más cercana)?",
-    "en": "210",
-    "es": "doscientos diez"
+    "question": "¿Cuántos huesos tiene el cuerpo humano adulto (aprox., redondeado a la decena más cercana)?",
+    "answer": "doscientos diez"
   },
   {
-    "q": "¿En qué año se celebró la primera Copa Mundial de la FIFA? (da solo los dos últimos números)",
-    "en": "30",
-    "es": "treinta"
+    "question": "¿En qué año se celebró la primera Copa Mundial de la FIFA? (da solo los dos últimos números)",
+    "answer": "treinta"
   }
 ]
+
