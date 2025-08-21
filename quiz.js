@@ -1,38 +1,60 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Sitio Español</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <!-- Red (soft) header -->
-  <div class="header">
-    <a href="index.html" class="home-link">
-      <img src="spanish-crest.png" alt="Home">
-    </a>
-    <h1>Bienvenido</h1>
-  </div>
+// Run the quiz
+function runQuiz(questions, endMessage) {
+  let index = 0;
+  const quizDiv = document.getElementById("quiz");
+  quizDiv.innerHTML = "";
 
-  <!-- Yellow (soft) middle section -->
-  <div class="main">
-    <p>Selecciona un quiz para empezar:</p>
+  function askQuestion() {
+    if (index >= questions.length) {
+      quizDiv.innerHTML = `<p>${endMessage}</p>`;
+      return;
+    }
 
-    <!-- Quiz buttons -->
-    <button onclick="startNumberQuiz()">Numbers</button>
-    <button onclick="startYearQuiz()">History Years</button>
+    const q = questions[index];
+    quizDiv.innerHTML = `
+      <p>${q.question}</p>
+      <input id="answer" type="text" placeholder="Escribe tu respuesta">
+      <button id="submit">Submit</button>
+      <p id="feedback"></p>
+    `;
 
-    <!-- Quiz content will appear here -->
-    <div id="quiz"></div>
-  </div>
+    const submitBtn = document.getElementById("submit");
+    submitBtn.onclick = () => {
+      const userAns = document.getElementById("answer").value.trim().toLowerCase();
+      const correctAns = q.answer.toLowerCase();
 
-  <!-- Red (soft) footer -->
-  <div class="footer">
-    <p>© 2025 Mi Sitio</p>
-  </div>
+      const feedback = document.getElementById("feedback");
+      if (userAns === correctAns) {
+        feedback.textContent = "✅ Correcto!";
+      } else {
+        feedback.textContent = `❌ Incorrecto. Respuesta correcta: ${q.answer}`;
+      }
 
-  <!-- Link to quiz logic -->
-  <script src="quiz.js"></script>
-</body>
-</html>
+      index++;
+      setTimeout(askQuestion, 1200);
+    };
+  }
+
+  askQuestion();
+}
+
+// Button 1 → Numbers (1–10 etc.)
+function startNumberQuiz() {
+  fetch('data/numbers-1.json')
+    .then(res => res.json())
+    .then(data => runQuiz(data, "¡Quiz de Números (1–10) completo! 🎉"));
+}
+
+// Button 2 → History Years
+function startYearQuiz() {
+  fetch('data/history-years.json')
+    .then(res => res.json())
+    .then(data => runQuiz(data, "¡Quiz de Años Históricos completo! 🎉"));
+}
+
+// Button 3 → Quiz de Números (20–100 cultural)
+function startTriviaQuiz() {
+  fetch('data/numbers-20-100.json')
+    .then(res => res.json())
+    .then(data => runQuiz(data, "¡Quiz de Números completo! 🎉"));
+}
