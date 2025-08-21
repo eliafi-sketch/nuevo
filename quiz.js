@@ -142,4 +142,90 @@ function endSession() {
 // Load the data once the page starts
 loadData();
 
+let yearQuestions = [];
+let currentIndex = 0;
+let awaitingNext = false;
+
+// Load JSON data
+async function loadYearData() {
+  const res = await fetch("data/years.json");
+  yearQuestions = await res.json();
+}
+
+// Start quiz
+function startQuiz() {
+  currentIndex = 0;
+  awaitingNext = false;
+  showYearQuestion();
+}
+
+// Show one question
+function showYearQuestion() {
+  const container = document.getElementById("quiz");
+  container.innerHTML = "";
+
+  const q = yearQuestions[currentIndex];
+
+  const label = document.createElement("p");
+  label.textContent = q.q;
+  container.appendChild(label);
+
+  const input = document.createElement("input");
+  input.id = "answerBox";
+  input.placeholder = "Type year in Spanish...";
+  container.appendChild(input);
+
+  const feedback = document.createElement("p");
+  feedback.id = "feedback";
+  container.appendChild(feedback);
+
+  const btn = document.createElement("button");
+  btn.id = "submitBtn";
+  btn.textContent = "Submit";
+  btn.onclick = handleYearAnswer;
+  container.appendChild(btn);
+
+  input.focus();
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") handleYearAnswer();
+  });
+}
+
+// Handle answer check
+function handleYearAnswer() {
+  const input = document.getElementById("answerBox");
+  const feedback = document.getElementById("feedback");
+  const btn = document.getElementById("submitBtn");
+
+  const q = yearQuestions[currentIndex];
+
+  if (!awaitingNext) {
+    if (input.value.trim().toLowerCase() === q.es.toLowerCase()) {
+      feedback.textContent = "✅ Correct!";
+      feedback.style.color = "green";
+    } else {
+      feedback.textContent = `❌ Wrong (Correct: ${q.es})`;
+      feedback.style.color = "red";
+    }
+    btn.textContent = "Next";
+    awaitingNext = true;
+  } else {
+    currentIndex++;
+    if (currentIndex < yearQuestions.length) {
+      awaitingNext = false;
+      showYearQuestion();
+    } else {
+      endYearQuiz();
+    }
+  }
+}
+
+// End of quiz
+function endYearQuiz() {
+  const container = document.getElementById("quiz");
+  container.innerHTML = "<p>Quiz complete! 🎉</p>";
+}
+
+// Load questions on page load
+loadYearData();
 
