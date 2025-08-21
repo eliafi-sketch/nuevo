@@ -1,22 +1,17 @@
-// Pools of numbers
-const pools = {
-  1: Array.from({ length: 10 }, (_, i) => i + 1),   // 1–10
-  2: Array.from({ length: 10 }, (_, i) => i + 11),  // 11–20
-};
-
-// Ratios for progression (old pool vs next pool)
-const ratios = [
-  { old: 1.0, next: 0.0 }, // 10 old
-  { old: 0.8, next: 0.2 }, // 8 old, 2 new
-  { old: 0.6, next: 0.4 },
-  { old: 0.4, next: 0.6 },
-  { old: 0.2, next: 0.8 },
-  { old: 0.0, next: 1.0 }  // all new
-];
-
 let sessionNumber = 0; // track progression
+let currentData1 = [];
+let currentData2 = [];
 
-// Random sampler
+// Load JSON files
+async function loadData() {
+  const res1 = await fetch("data/numbers-1.json");
+  currentData1 = await res1.json();
+
+  const res2 = await fetch("data/numbers-2.json");
+  currentData2 = await res2.json();
+}
+
+// Helper: random pick
 function sample(array, n) {
   const copy = [...array];
   const result = [];
@@ -28,24 +23,27 @@ function sample(array, n) {
   return result;
 }
 
-// Shuffle utility
-function shuffle(array) {
-  return array.map(v => ({ v, r: Math.random() }))
-              .sort((a, b) => a.r - b.r)
-              .map(obj => obj.v);
-}
+// Ratios for progression
+const ratios = [
+  { old: 1.0, next: 0.0 },
+  { old: 0.8, next: 0.2 },
+  { old: 0.6, next: 0.4 },
+  { old: 0.4, next: 0.6 },
+  { old: 0.2, next: 0.8 },
+  { old: 0.0, next: 1.0 }
+];
 
-// Generate a quiz session
+// Generate a session of 10 questions
 function generateSession(sessionNum) {
   const ratio = ratios[Math.min(sessionNum, ratios.length - 1)];
 
   const oldCount = Math.round(10 * ratio.old);
   const newCount = 10 - oldCount;
 
-  const oldQs = sample(pools[1], oldCount);
-  const newQs = sample(pools[2], newCount);
+  const oldQs = sample(currentData1, oldCount);
+  const newQs = sample(currentData2, newCount);
 
-  return shuffle([...oldQs, ...newQs]);
+  return [...oldQs, ...newQs];
 }
 
 // Render quiz
@@ -54,27 +52,30 @@ function startQuiz() {
   const container = document.getElementById("quiz");
   container.innerHTML = "";
 
-  questions.forEach(num => {
+  questions.forEach(q => {
+    const div = document.createElement("div");
+    const label = document.createElement("label");
+    label.textContent = `${q.en} → `;
     const input = document.createElement("input");
-    input.placeholder = `Spanish for ${num}`;
-    input.dataset.answer = num; // expected answer (just for demo)
-    container.appendChild(input);
-    container.appendChild(document.createElement("br"));
+    input.dataset.answer = q.es;
+    div.appendChild(label);
+    div.appendChild(input);
+    container.appendChild(div);
   });
 
   const btn = document.createElement("button");
   btn.textContent = "Submit";
-  btn.onclick = () => checkAnswers(container, questions);
+  btn.onclick = () => checkAnswers(questions);
   container.appendChild(btn);
 }
 
-// Check answers (simple — expects same number typed in)
-function checkAnswers(container, questions) {
-  const inputs = container.querySelectorAll("input");
+// Check answers
+function checkAnswers(questions) {
+  const inputs = document.querySelectorAll("#quiz input");
   let correct = 0;
 
   inputs.forEach(input => {
-    if (input.value.trim() === input.dataset.answer) {
+    if (input.value.trim().toLowerCase() === input.dataset.answer.toLowerCase()) {
       correct++;
       input.style.borderColor = "green";
     } else {
@@ -83,12 +84,16 @@ function checkAnswers(container, questions) {
   });
 
   const result = document.getElementById("result");
-  result.textContent = `You got ${correct} / ${questions.length} correct`;
+  result.textContent = `You got ${correct} / ${questions.length}`;
 
   if (correct === questions.length) {
     sessionNumber++;
     result.textContent += " ✅ Perfect! Next set unlocked.";
   }
 }
+
+// Load data when page starts
+loadData();
+
 
 
