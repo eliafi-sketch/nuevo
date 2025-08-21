@@ -1,132 +1,38 @@
-/* -------------------------
-   NUMBERS QUIZ
---------------------------*/
-let numberSession = 0;
-let numberQuestions = [];
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Sitio Español</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Red (soft) header -->
+  <div class="header">
+    <a href="index.html" class="home-link">
+      <img src="spanish-crest.png" alt="Home">
+    </a>
+    <h1>Bienvenido</h1>
+  </div>
 
-async function loadNumberData() {
-  const res1 = await fetch("data/numbers-1.json");
-  const pool1 = await res1.json();
-  const res2 = await fetch("data/numbers-2.json");
-  const pool2 = await res2.json();
+  <!-- Yellow (soft) middle section -->
+  <div class="main">
+    <p>Selecciona un quiz para empezar:</p>
 
-  numberQuestions = [pool1, pool2];
-}
+    <!-- Quiz buttons -->
+    <button onclick="startNumberQuiz()">Numbers</button>
+    <button onclick="startYearQuiz()">History Years</button>
 
-function startNumberQuiz() {
-  const questions = [...numberQuestions[0]]; // just first pool to demo
-  runQuiz(questions, "Numbers quiz complete! 🎉");
-}
+    <!-- Quiz content will appear here -->
+    <div id="quiz"></div>
+  </div>
 
+  <!-- Red (soft) footer -->
+  <div class="footer">
+    <p>© 2025 Mi Sitio</p>
+  </div>
 
-/* -------------------------
-   HISTORY YEARS QUIZ
---------------------------*/
-let yearQuestions = [];
-
-async function loadYearData() {
-  const res = await fetch("data/years.json");
-  yearQuestions = await res.json();
-}
-
-function startYearQuiz() {
-  runQuiz(yearQuestions, "History years quiz complete! 🎉");
-}
-
-
-/* -------------------------
-   GENERIC QUIZ ENGINE
-   (used by both quizzes)
---------------------------*/
-let currentIndex = 0;
-let currentQuestions = [];
-let awaitingNext = false;
-let endMessage = "";
-
-function runQuiz(qs, message) {
-  currentQuestions = shuffle(qs);
-  currentIndex = 0;
-  awaitingNext = false;
-  endMessage = message;
-  showQuestion();
-}
-
-function showQuestion() {
-  const container = document.getElementById("quiz");
-  container.innerHTML = "";
-
-  const q = currentQuestions[currentIndex];
-
-  const label = document.createElement("p");
-  label.textContent = q.q ? q.q : `Translate: ${q.en}`;
-  container.appendChild(label);
-
-  const input = document.createElement("input");
-  input.id = "answerBox";
-  input.placeholder = "Type in Spanish...";
-  container.appendChild(input);
-
-  const feedback = document.createElement("p");
-  feedback.id = "feedback";
-  container.appendChild(feedback);
-
-  const btn = document.createElement("button");
-  btn.id = "submitBtn";
-  btn.textContent = "Submit";
-  btn.onclick = handleAnswer;
-  container.appendChild(btn);
-
-  input.focus();
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter") handleAnswer();
-  });
-}
-
-function handleAnswer() {
-  const input = document.getElementById("answerBox");
-  const feedback = document.getElementById("feedback");
-  const btn = document.getElementById("submitBtn");
-
-  const q = currentQuestions[currentIndex];
-
-  if (!awaitingNext) {
-    if (input.value.trim().toLowerCase() === q.es.toLowerCase()) {
-      feedback.textContent = "✅ Correct!";
-      feedback.style.color = "green";
-    } else {
-      feedback.textContent = `❌ Wrong (Correct: ${q.es})`;
-      feedback.style.color = "red";
-    }
-    btn.textContent = "Next";
-    awaitingNext = true;
-  } else {
-    currentIndex++;
-    if (currentIndex < currentQuestions.length) {
-      awaitingNext = false;
-      showQuestion();
-    } else {
-      endQuiz();
-    }
-  }
-}
-
-function endQuiz() {
-  const container = document.getElementById("quiz");
-  container.innerHTML = `<p>${endMessage}</p>`;
-}
-
-// Utility shuffle
-function shuffle(array) {
-  return array.map(v => ({ v, r: Math.random() }))
-              .sort((a, b) => a.r - b.r)
-              .map(obj => obj.v);
-}
-
-// Load data
-loadNumberData();
-loadYearData();
-
-
-// Load questions on page load
-loadYearData();
-
+  <!-- Link to quiz logic -->
+  <script src="quiz.js"></script>
+</body>
+</html>
