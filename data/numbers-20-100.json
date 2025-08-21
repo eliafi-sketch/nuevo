@@ -1,0 +1,52 @@
+[
+  {
+    "q": "¿Cuántos países hay en la Unión Europea?",
+    "en": "27",
+    "es": "veintisiete"
+  },
+  {
+    "q": "¿Cuántos letras tiene el alfabeto español moderno?",
+    "en": "27",
+    "es": "veintisiete"
+  },
+  {
+    "q": "¿Cuántos equipos juegan en la primera división del fútbol español (La Liga)?",
+    "en": "20",
+    "es": "veinte"
+  },
+  {
+    "q": "¿Cuántos años gobernó Francisco Franco en España?",
+    "en": "36",
+    "es": "treinta y seis"
+  },
+  {
+    "q": "¿En qué año (siglo) cayó el Imperio Romano de Occidente? (responde con el siglo en número romano convertido a número)",
+    "en": "5",
+    "es": "cinco"
+  },
+  {
+    "q": "¿Cuántos cantones hay en Suiza?",
+    "en": "26",
+    "es": "veintiséis"
+  },
+  {
+    "q": "¿En qué año murió Pablo Picasso? (da solo los dos últimos números)",
+    "en": "73",
+    "es": "setenta y tres"
+  },
+  {
+    "q": "¿Cuántos episodios tiene la primera temporada de 'La Casa de Papel'?",
+    "en": "13",
+    "es": "trece"
+  },
+  {
+    "q": "¿Cuántos huesos tiene el cuerpo humano adulto (aprox., redondeado a la decena más cercana)?",
+    "en": "210",
+    "es": "doscientos diez"
+  },
+  {
+    "q": "¿En qué año se celebró la primera Copa Mundial de la FIFA? (da solo los dos últimos números)",
+    "en": "30",
+    "es": "treinta"
+  }
+]
