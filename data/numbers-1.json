@@ -1,12 +1,12 @@
 [
-  { "en": "1", "es": "uno" },
-  { "en": "2", "es": "dos" },
-  { "en": "3", "es": "tres" },
-  { "en": "4", "es": "cuatro" },
-  { "en": "5", "es": "cinco" },
-  { "en": "6", "es": "seis" },
-  { "en": "7", "es": "siete" },
-  { "en": "8", "es": "ocho" },
-  { "en": "9", "es": "nueve" },
-  { "en": "10", "es": "diez" }
+  { "question": "1 → ?", "answer": "uno" },
+  { "question": "2 → ?", "answer": "dos" },
+  { "question": "3 → ?", "answer": "tres" },
+  { "question": "4 → ?", "answer": "cuatro" },
+  { "question": "5 → ?", "answer": "cinco" },
+  { "question": "6 → ?", "answer": "seis" },
+  { "question": "7 → ?", "answer": "siete" },
+  { "question": "8 → ?", "answer": "ocho" },
+  { "question": "9 → ?", "answer": "nueve" },
+  { "question": "10 → ?", "answer": "diez" }
 ]
