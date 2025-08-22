@@ -1,11 +1,11 @@
 [
-  { "q": "What year was Australia founded?", "en": "1788", "es": "mil setecientos ochenta y ocho" },
-  { "q": "What year was Charlemagne crowned Emperor?", "en": "800", "es": "ochocientos" },
-  { "q": "What year did Cervantes release Don Quijote?", "en": "1605", "es": "mil seiscientos cinco" },
-  { "q": "When did the Philippines gain independence?", "en": "1946", "es": "mil novecientos cuarenta y seis" },
-  { "q": "What year was the smallpox vaccine invented?", "en": "1796", "es": "mil setecientos noventa y seis" },
-  { "q": "What year was Princess Mononoke released?", "en": "1997", "es": "mil novecientos noventa y siete" },
-  { "q": "What year was Anne Boleyn executed?", "en": "1536", "es": "mil quinientos treinta y seis" },
-  { "q": "What year did man land on the moon?", "en": "1969", "es": "mil novecientos sesenta y nueve" },
-  { "q": "What year did the DRC gain independence?", "en": "1960", "es": "mil novecientos sesenta" }
+  { "question": "What year was Australia founded?", "answer": "mil setecientos ochenta y ocho" },
+  { "question": "What year was Charlemagne crowned Emperor?", "answer": "ochocientos" },
+  { "question": "What year did Cervantes release Don Quijote?", "answer": "mil seiscientos cinco" },
+  { "question": "When did the Philippines gain independence?", "answer": "mil novecientos cuarenta y seis" },
+  { "question": "What year was the smallpox vaccine invented?", "answer": "mil setecientos noventa y seis" },
+  { "question": "What year was Princess Mononoke released?", "answer": "mil novecientos noventa y siete" },
+  { "question": "What year was Anne Boleyn executed?", "answer": "mil quinientos treinta y seis" },
+  { "question": "What year did man land on the moon?", "answer": "mil novecientos sesenta y nueve" },
+  { "question": "What year did the DRC gain independence?", "answer": "mil novecientos sesenta" }
 ]
